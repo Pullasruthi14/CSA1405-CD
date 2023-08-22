@@ -1,0 +1,42 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <string.h>
+
+#define MAX_PROD_LEN 20
+
+struct Production {
+    char nonTerminal;
+    char production[MAX_PROD_LEN];
+};
+
+bool isAmbiguous(struct Production *productions, int numProductions) {
+    for (int i = 0; i < numProductions; i++) {
+        for (int j = i + 1; j < numProductions; j++) {
+            if (productions[i].nonTerminal == productions[j].nonTerminal &&
+                strcmp(productions[i].production, productions[j].production) == 0) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+int main() {
+    struct Production grammarProductions[] = {
+        {'E', "E + T"},
+        {'E', "T"},
+        {'T', "T * F"},
+        {'T', "F"},
+        {'F', "( E )"},
+        {'F', "id"}
+    };
+    int numProductions = sizeof(grammarProductions) / sizeof(grammarProductions[0]);
+
+    if (isAmbiguous(grammarProductions, numProductions)) {
+        printf("The grammar is ambiguous.\n");
+    } else {
+        printf("The grammar is not ambiguous.\n");
+    }
+
+    return 0;
+}
